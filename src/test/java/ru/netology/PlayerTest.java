@@ -1,7 +1,11 @@
 package ru.netology;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
 
 public class PlayerTest {
 
@@ -17,6 +21,19 @@ public class PlayerTest {
         int expected = 3;
         int actual = player.sumGenre(game.getGenre());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldCountTimeStatisticIfOneGame() {
+        GameStore store = new GameStore();
+        Game game = store.publishGame("Arcanum", "RPG");
+
+        Player player = new Player("Jony");
+        player.installGame(game);
+
+        int expected = 2;
+        int actual = player.play(game, 2);
+        Assertions.assertEquals(expected, actual);
     }
 
     // другие ваши тесты
