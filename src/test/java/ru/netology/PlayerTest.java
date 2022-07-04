@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PlayerTest {
 
@@ -73,7 +74,7 @@ public class PlayerTest {
         int expected = 1;
         int actual = player.play(game1, 1);
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -86,7 +87,7 @@ public class PlayerTest {
         int expected = 3;
         int actual = player.play(game1, 2);
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -100,7 +101,7 @@ public class PlayerTest {
         int expected = 8;
         int actual = player.play(game1, 2);
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -113,7 +114,7 @@ public class PlayerTest {
         int expected = 3;
         int actual = player.play(game3, 3);
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -129,14 +130,16 @@ public class PlayerTest {
         int expected = 12;
         int actual = player.play(game1, 3);
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     public void shouldThrowRuntimeExceptionWithUninstalledGameEmptyGamesList() {
         Player player = new Player("Jony");
 
-        Assertions.assertThrows(RuntimeException.class, () -> {player.play(game1, 2);} );
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            player.play(game1, 2);
+        });
     }
 
     @Test
@@ -145,7 +148,9 @@ public class PlayerTest {
         player.installGame(game2);
         player.installGame(game3);
 
-        Assertions.assertThrows(RuntimeException.class, () -> {player.play(game1, 2);} );
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            player.play(game1, 2);
+        });
     }
 
     @Test
@@ -159,7 +164,7 @@ public class PlayerTest {
         Game expected = game1;
         Game actual = player.mostPlayerByGenre(game1.getGenre());
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -173,7 +178,7 @@ public class PlayerTest {
         Game expected = null;
         Game actual = player.mostPlayerByGenre("Strategy");
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -187,8 +192,9 @@ public class PlayerTest {
         Game expected = null;
         Game actual = player.mostPlayerByGenre(game1.getGenre());
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
+
     @Test
     public void shouldReturnGameOfMostPlayerByGenreIfInstallSeveralGameAndOneGameSuchGenre() {
         Player player = new Player("Jony");
@@ -208,7 +214,7 @@ public class PlayerTest {
         Game expected = game5;
         Game actual = player.mostPlayerByGenre(game5.getGenre());
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -230,7 +236,7 @@ public class PlayerTest {
         Game expected = game2;
         Game actual = player.mostPlayerByGenre(game3.getGenre());
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -252,7 +258,7 @@ public class PlayerTest {
         Game expected = null;
         Game actual = player.mostPlayerByGenre("Action");
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -274,7 +280,7 @@ public class PlayerTest {
         Game expected = null;
         Game actual = player.mostPlayerByGenre(game5.getGenre());
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -296,8 +302,72 @@ public class PlayerTest {
         Game expected = null;
         Game actual = player.mostPlayerByGenre(game4.getGenre());
 
-        Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(expected, actual);
     }
 
-    // другие ваши тесты
+    @Test
+    public void shouldSendPlayTimeToGameStore() {
+        Player player = new Player("Jony");
+
+        player.installGame(game1);
+        player.installGame(game2);
+        player.installGame(game3);
+
+        player.play(game1, 8);
+        player.play(game3, 3);
+        player.play(game2, 7);
+
+        Map<String, Integer> expected = new HashMap<>();
+
+        expected.put(player.getName(), 18);
+        // нужен геттер на playedTime в Store
+        Map<String, Integer> actual = store.getPlayedTime();//
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldReturnZeroOfSumGenreIfNotPlayedGames() {
+        Player player = new Player("Petya");
+
+        player.installGame(game5);
+        player.installGame(game2);
+        player.installGame(game3);
+
+        player.play(game5, 0);
+        player.play(game3, 0);
+        player.play(game2, 0);
+
+        int expected = 0;
+        int actual = player.sumGenre(game3.getGenre());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldReturnOneHourOfSumGenreIfPlayGamesOneHour() {
+        Player player = new Player("Petya");
+
+        player.installGame(game5);
+        player.installGame(game2);
+        player.installGame(game3);
+
+        player.play(game5, 0);
+        player.play(game3, 0);
+        player.play(game2, 1);
+
+        int expected = 1;
+        int actual = player.sumGenre(game3.getGenre());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldReturnZeroOfPlayWithZeroValue() {
+        Player player = new Player("Jony");
+        player.installGame(game1);
+
+        int expected = 0;
+        int actual = player.play(game1, 0);
+
+        Assertions.assertEquals(expected, actual);
+    }
 }

@@ -27,6 +27,7 @@ public class GameStore {
      * Создание объекта игры с заданными заголовком и жанром
      * Каждый объект игры помнит объект каталога, которому она принадлежит
      */
+
     public Game publishGame(String title, String genre) {
         Game game = new Game(title, genre, this);
         games.add(game);
