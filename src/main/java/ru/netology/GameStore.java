@@ -15,6 +15,10 @@ public class GameStore {
      */
     private Map<String, Integer> playedTime = new HashMap<>();
 
+    public List<Game> getGames() {
+        return games;
+    }
+
     public Map<String, Integer> getPlayedTime() {
         return playedTime;
     }
@@ -30,13 +34,14 @@ public class GameStore {
         return game;
     }
 
+
     /**
      * Проверяет наличие игры в каталоге и возврашает true
      * если игра есть и false иначе
      */
     public boolean containsGame(Game game) {
-        for (int i = 1; i < games.size(); i++) {
-            if (games.get(i - 1).equals(game)) {
+        for (int i = 0; i < games.size(); i++) {
+            if (games.get(i).equals(game)) {
                 return true;
             }
         }
@@ -61,14 +66,20 @@ public class GameStore {
      * времени. Если игроков нет, то возвращется null
      */
     public String getMostPlayer() {
-        int mostTime = 1;
+        if (playedTime.isEmpty()) {
+            return null;
+        }
         String bestPlayer = null;
+        int mostTime = 0;
         for (String playerName : playedTime.keySet()) {
             int playerTime = playedTime.get(playerName);
             if (playerTime > mostTime) {
                 mostTime = playerTime;
                 bestPlayer = playerName;
             }
+        }
+        if (mostTime == 0) {
+            return null;
         }
         return bestPlayer;
     }
@@ -78,6 +89,10 @@ public class GameStore {
      * за играми этого каталога
      */
     public int getSumPlayedTime() {
-        return 0;
+        int sum = 0;
+        for (String playerName : playedTime.keySet()) {
+            sum += playedTime.get(playerName);
+        }
+        return sum;
     }
 }
